@@ -95,6 +95,9 @@ static struct dlt_choice dlt_choices[] = {
 #ifdef DLT_LINUX_SLL
 	DLT_CHOICE(DLT_LINUX_SLL, "Linux cooked"),
 #endif
+#ifdef DLT_LINUX_SLL2
+	DLT_CHOICE(DLT_LINUX_SLL2, "Linux cooked v2"),
+#endif
 #ifdef DLT_LTALK
 	DLT_CHOICE(DLT_LTALK, "Localtalk"),
 #endif

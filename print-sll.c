@@ -26,6 +26,9 @@
 #endif
 
 #include "netdissect-stdinc.h"
+#ifdef PCAP_SUPPORT_SLL_V2
+#include <net/if.h>
+#endif
 
 #include "netdissect.h"
 #include "addrtoname.h"
@@ -71,17 +74,32 @@
  */
 
 /*
- * A DLT_LINUX_SLL fake link-layer header.
+ * DLT_LINUX_SLL and DLT_LINUX_SLL2 fake link-layer header.
  */
-#define SLL_HDR_LEN	16		/* total header length */
+/* total header length */
+#ifdef PCAP_SUPPORT_SLL_V2
+#define SLL_HDR_LEN	24
+#else
+#define SLL_HDR_LEN	16
+#endif
 #define SLL_ADDRLEN	8		/* length of address field */
 
 struct sll_header {
+#ifdef PCAP_SUPPORT_SLL_V2
+	nd_uint16_t	sll_protocol;	/* protocol */
+	nd_uint16_t	reserved;	/* reserved */
+	nd_int32_t	sll_ifindex;	/* interface index, DLT_LINUX_SLL2 ONLY! */
+	nd_uint16_t	sll_hatype;	/* link-layer address type */
+	nd_uint16_t	sll_halen;	/* link-layer address length */
+	nd_byte		sll_addr[SLL_ADDRLEN];	/* link-layer address */
+	nd_uint16_t	sll_pkttype;	/* packet type */
+#else
 	nd_uint16_t	sll_pkttype;	/* packet type */
 	nd_uint16_t	sll_hatype;	/* link-layer address type */
 	nd_uint16_t	sll_halen;	/* link-layer address length */
 	nd_byte		sll_addr[SLL_ADDRLEN];	/* link-layer address */
 	nd_uint16_t	sll_protocol;	/* protocol */
+#endif
 };
 
 /*
@@ -213,6 +231,11 @@ sll_if_print(netdissect_options *ndo, const struct pcap_pkthdr *h, const u_char 
 	}
 
 	sllp = (const struct sll_header *)p;
+#ifdef PCAP_SUPPORT_SLL_V2
+	char ifname[IF_NAMESIZE];
+	if (if_indextoname(EXTRACT_BE_U_6(sllp->sll_ifindex), ifname))
+		ND_PRINT("IFNAME %s ", ifname);
+#endif
 
 	if (ndo->ndo_eflag)
 		sll_print(ndo, sllp, length);

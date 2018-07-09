@@ -123,8 +123,11 @@ static const struct printer printers[] = {
 #endif
 	{ token_if_print,	DLT_IEEE802 },
 	{ fddi_if_print,	DLT_FDDI },
-#ifdef DLT_LINUX_SLL
+#if defined(DLT_LINUX_SLL) && !defined(PCAP_SUPPORT_SLL_V2)
 	{ sll_if_print,		DLT_LINUX_SLL },
+#endif
+#if defined(DLT_LINUX_SLL2) && defined(PCAP_SUPPORT_SLL_V2)
+	{ sll_if_print,	DLT_LINUX_SLL2 },
 #endif
 #ifdef DLT_FR
 	{ fr_if_print,		DLT_FR },

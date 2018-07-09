@@ -1010,6 +1010,16 @@ if test "$missing_includes" = "yes"; then
 	V_INCLS="$V_INCLS -I$srcdir/missing"
 fi
 
+AC_ARG_ENABLE([sll-v2],
+[AC_HELP_STRING([--enable-sll-v2],[enable new LINKTYPE_LINUX_SLL2 capture support on Linux instead of legacy LINKTYPE_LINUX_SLL @<:@default=yes@:>@])],
+    [],
+    [enable_sll_v2=yes])
+
+if test "x$enable_sll_v2" != "xno" ; then
+	AC_DEFINE(PCAP_SUPPORT_SLL_V2, 1, [enable new LINKTYPE_LINUX_SLL2 capture support on Linux instead of legacy LINKTYPE_LINUX_SLL])
+	AC_SUBST(PCAP_SUPPORT_SLL_V2)
+fi
+
 AC_SUBST(V_CCOPT)
 AC_SUBST(V_DEFS)
 AC_SUBST(V_GROUP)

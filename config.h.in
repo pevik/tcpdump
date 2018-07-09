@@ -267,6 +267,10 @@
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
+/* enable new LINKTYPE_LINUX_SLL2 capture support on Linux instead of legacy
+   LINKTYPE_LINUX_SLL */
+#undef PCAP_SUPPORT_SLL_V2
+
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
 
